@@ -51,4 +51,13 @@ class FileDB {
         return false;
     }
 
+    //tikrinama, ar lentelė yra
+    public function tableExists($table_name) {
+        if (isset($this->data[$table_name])) {
+
+            return true;
+        }
+        return false;
+    }
+
 }
