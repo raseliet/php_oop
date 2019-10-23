@@ -43,18 +43,27 @@ class FileDB {
     }
 
     //kuriama lentelė
-    public function createTable($table_name) {
-        if (!isset($this->data[$table_name])) {
-            $this->data[$table_name] = [];
-            return true;
-        }
-        return false;
-    }
+//    public function createTable($table_name) {
+//        if (!isset($this->data[$table_name])) {
+//            $this->data[$table_name] = [];
+//            return true;
+//        }
+//        return false;
+//    }
 
     //tikrinama, ar lentelė yra
     public function tableExists($table_name) {
         if (isset($this->data[$table_name])) {
 
+            return true;
+        }
+        return false;
+    }
+    
+    //panaudojant tableExists, sukurti lentelę
+    public function createTable($table_name) {
+        if (!$this->tableExists($table_name)) {
+            
             return true;
         }
         return false;
