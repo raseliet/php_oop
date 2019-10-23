@@ -63,7 +63,7 @@ class FileDB {
     //panaudojant tableExists, sukurti lentelę
     public function createTable($table_name) {
         if (!$this->tableExists($table_name)) {
-            
+            $this->data[$table_name] = [];
             return true;
         }
         return false;
