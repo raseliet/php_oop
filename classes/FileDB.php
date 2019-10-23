@@ -38,9 +38,10 @@ class FileDB {
     }
 
     //nurodytu indeksu įdeda vertę, nieko nereturnina
-//    public function addRow($table, $row) {
-//        $this->data[$table][] = $row;
-//    }
+    public function addRow($table, $row) {
+        $this->data[$table][] = $row;
+    }
+
     //kuriama lentelė
 //    public function createTable($table_name) {
 //        if (!isset($this->data[$table_name])) {
@@ -89,23 +90,46 @@ class FileDB {
      */
     public function insertRow($table_name, $row, $row_id = null) {
         if ($row_id !== null) {
-            ​
+            
             if (!isset($this->data[$table_name][$row_id])) {
                 $this->data[$table_name][$row_id] = $row;
                 return $row_id;
             }
-            ​
+            
             return false;
-            ​
+            
         } else {
             $this->data[$table_name][] = $row;
-            ​
+            
             // surandame pask. indeksa
             end($this->data[$table_name]);
             $row_id = key($this->data[$table_name]);
-
+            
             return $row_id;
         }
+    }
+
+    public function rowExists($table_name, $row_id) {
+        if (isset($this->data[$table_name][$row_id])) {
+            return true;
+        }
+        return false;
+    }
+
+    public function insertRowIfNotExists($table_name, $row, $row_id) {
+        if (!$this->rowExist($table_name, $row_id)) {
+            $this->data[$table_name][$row_id] = $row;
+            return $row_id;
+        }
+        return false;
+    }
+
+    public function updateRow($table, $row_id, $row) {
+        if ($this->rowExist($table, $row_id)) {
+            $this->data[$table][$row_id] = $row;
+            return true;
+        }
+        return false;
     }
 
 }
