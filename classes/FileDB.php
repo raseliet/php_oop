@@ -50,7 +50,6 @@ class FileDB {
 //        }
 //        return false;
 //    }
-
     //tikrinama, ar lentelė yra
     public function tableExists($table_name) {
         if (isset($this->data[$table_name])) {
@@ -59,7 +58,7 @@ class FileDB {
         }
         return false;
     }
-    
+
     //panaudojant tableExists, sukurti lentelę
     public function createTable($table_name) {
         if (!$this->tableExists($table_name)) {
@@ -67,6 +66,11 @@ class FileDB {
             return true;
         }
         return false;
+    }
+
+    //ištrinti lentelę kartu su indeksu
+    public function dropTable($table_name) {
+        unset($this->data[$table_name]);
     }
 
 }
