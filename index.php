@@ -16,4 +16,7 @@ $db->addRow('Vartotojai', ['name'=>'Rasa', 'surname' => 'Lietuvnikaite']);
 $db->save();
 
 $db->load();
+
+
+
 var_dump($db->getData());

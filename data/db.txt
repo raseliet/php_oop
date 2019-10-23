@@ -1,1 +1,1 @@
-{"Vartotojai":[{"name":"Iveta","surname":"Isajevaite"},{"name":"Rasa","surname":"Lietuvnikaite"}]}
+{"Vartotojai":[{"name":"Iveta","surname":"Isajevaite"},{"name":"Rasa","surname":"Lietuvnikaite"},{"name":"Rasa","surname":"Lietuvnikaite"}]}

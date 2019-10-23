@@ -42,4 +42,13 @@ class FileDB {
         $this->data[$table][] = $row;
     }
 
+    //kuriama lentelė
+    public function createTable($table_name) {
+        if (!isset($this->data[$table_name])) {
+            $this->data[$table_name] = [];
+            return true;
+        }
+        return false;
+    }
+
 }
