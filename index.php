@@ -20,9 +20,14 @@ $db->insertRow('Vartotojai', ['name'=>'Iveta', 'surname' => 'Isajevaite']);
 
 //$db->createTable('users');
 
+//var_dump($db->tableExists('users'));
+$duomenys = $db->getData();
+var_dump($duomenys);
+//var_dump($db->tableExists('users'));
+
 $db->save();
 
 
 //
-var_dump($db->getData());
+//var_dump($db->getData());
 

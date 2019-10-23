@@ -90,21 +90,20 @@ class FileDB {
      */
     public function insertRow($table_name, $row, $row_id = null) {
         if ($row_id !== null) {
-            
+
             if (!isset($this->data[$table_name][$row_id])) {
                 $this->data[$table_name][$row_id] = $row;
                 return $row_id;
             }
-            
+
             return false;
-            
         } else {
             $this->data[$table_name][] = $row;
-            
+
             // surandame pask. indeksa
             end($this->data[$table_name]);
             $row_id = key($this->data[$table_name]);
-            
+
             return $row_id;
         }
     }
@@ -127,6 +126,14 @@ class FileDB {
     public function updateRow($table, $row_id, $row) {
         if ($this->rowExist($table, $row_id)) {
             $this->data[$table][$row_id] = $row;
+            return true;
+        }
+        return false;
+    }
+
+    public function deleteRow($table_name, $row_id) {
+        if (isset($this->data[$table_name][$row_id])) {
+            unset($this->data[$table_name][$row_id]);
             return true;
         }
         return false;
