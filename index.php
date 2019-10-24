@@ -2,6 +2,7 @@
 
 require 'functions/file.php';
 require 'classes/FileDB.php';
+require 'classes/Drinks/Drink.php';
 
 
 $db = new FileDB('data/db.txt');
