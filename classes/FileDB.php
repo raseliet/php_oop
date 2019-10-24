@@ -10,9 +10,10 @@ class FileDB {
     //construct išsikviečia pats, tik sukūrus naują objektą
     public function __construct($file_name) {
         $this->file_name = $file_name;
+        $this->load();
     }
 
-    //pripildo objektą(užloadina), iš txt failo paima duomenis ir jsonu paverčia į array
+    //pripildo objektą(užloadina), iš txt failo paima duomenis ir jsonu paverčia į array (load dirba tik su failu - saugo tik faila)
     public function load() {
         $this->data = file_to_array($this->file_name);
     }
@@ -27,7 +28,7 @@ class FileDB {
         return $this->data;
     }
 
-    //įrašo į txt failą tai, kas tuo metu įdėta į variablą
+    //įrašo į txt failą tai, kas tuo metu įdėta į variablą (save dirba tik su failu - saugo tik faila)
     public function save() {
         return array_to_file($this->data, $this->file_name);
     }
@@ -116,7 +117,7 @@ class FileDB {
     }
 
     public function insertRowIfNotExists($table_name, $row, $row_id) {
-        if (!$this->rowExist($table_name, $row_id)) {
+        if (!$this->rowExists($table_name, $row_id)) {
             $this->data[$table_name][$row_id] = $row;
             return $row_id;
         }
@@ -137,6 +138,34 @@ class FileDB {
             return true;
         }
         return false;
+    }
+
+    public function getRowsWhere($table, $conditions) {
+        $rows = [];
+
+        foreach ($this->data[$table] as $row_id => $row) {
+            $success = true;
+            
+           
+            foreach ($conditions as $condition_id => $condition) {
+                if ($row[$condition_id] !== $condition) {
+                    $success = false;
+                    break;
+                }
+            }
+
+            if ($success = true) {
+                // i row indeksu row itraukiam row_id
+                $row['row'] = $row_id;
+                $rows[$row_id] = $row;
+            }
+        }
+
+        return $rows;
+    }
+    
+    public function __destruct() {
+        $this->save();
     }
 
 }
