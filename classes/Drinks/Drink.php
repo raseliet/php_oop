@@ -1,48 +1,41 @@
 <?php
 
+declare (strict_types = 1);
+
 class Drink {
-
+    
     private $data;
-   
-
+    
+    public function getName() {
+        return $this->data['name'];
+    }
+    
     public function setName(string $name) {
         $this->data['name'] = $name;
     }
-
-    public function getName() {
-        if ($this->data ['name']) {
-            return $this->name;
-        }
+    
+    public function getAmount() {
+        return $this->data['amount_ml'];
     }
-
-    public function setAmount_ml(int $amount_ml) {
+    
+    public function setAmount(int $amount_ml) {
         $this->data['amount_ml'] = $amount_ml;
     }
-
-    public function getAmount_ml() {
-        if ($this->data['amount_ml']) {
-            return $this->amount_ml;
-        }
+    
+    public function getAbarot() {
+        return $this->data['abarot'];
     }
-
+    
     public function setAbarot(float $abarot) {
         $this->data['abarot'] = $abarot;
     }
-
-    public function getAbarot() {
-        if ($this->data['abarot']) {
-            return $this->abarot;
-        }
-    }
-
-    public function setImage(string $url) {
-        $this->data['name'] = $url;
-    }
-
+    
     public function getImage() {
-        if ($this->date['url']) {
-            return $this->url;
-        }
+        return $this->data['image'];
     }
-
+    
+    public function setImage(string $url) {
+        $this->data['image'] = $url;
+    }
+    
 }
