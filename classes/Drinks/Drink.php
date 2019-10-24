@@ -35,13 +35,13 @@ class Drink {
         }
     }
 
-    public function setImage(string $image) {
-        $this->data['name'] = $image;
+    public function setImage(string $url) {
+        $this->data['name'] = $url;
     }
 
     public function getImage() {
-        if ($this->date['image']) {
-            return $this->image;
+        if ($this->date['url']) {
+            return $this->url;
         }
     }
 
