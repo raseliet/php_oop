@@ -2,65 +2,61 @@
 
 class FileDB {
 
-    //nepasiekiamas metodas išorėje
     private $file_name;
     private $data;
 
-    //atviras metodas išorėje, t.y.prieinamas
-    //construct išsikviečia pats, tik sukūrus naują objektą
     public function __construct($file_name) {
         $this->file_name = $file_name;
         $this->load();
     }
 
-    //pripildo objektą(užloadina), iš txt failo paima duomenis ir jsonu paverčia į array (load dirba tik su failu - saugo tik faila)
+    /**
+     * Loads data array from file to $this->data
+     */
     public function load() {
         $this->data = file_to_array($this->file_name);
     }
 
-    //įdedu data 
-    public function setData($data_array) {
-        $this->data = $data_array;
-    }
-
-    //returnina tai, kas nurodoma Ėthis->data
-    public function getData() {
-        return $this->data;
-    }
-
-    //įrašo į txt failą tai, kas tuo metu įdėta į variablą (save dirba tik su failu - saugo tik faila)
+    /**
+     * Saves $this->data array to file
+     * @return boolean
+     */
     public function save() {
         return array_to_file($this->data, $this->file_name);
     }
 
-    //paima vertę ir returnina
-    public function getrow($table, $row_id) {
-        return $this->data[$table][$row_id];
+    /**
+     * 
+     * @return type
+     */
+    public function getData() {
+        if ($this->data == null) {
+            $this->load();
+        }
+        return $this->data;
     }
 
-    //nurodytu indeksu įdeda vertę, nieko nereturnina
-    public function addRow($table, $row) {
-        $this->data[$table][] = $row;
+    public function setData($data_array) {
+        $this->data = $data_array;
     }
 
-    //kuriama lentelė
-//    public function createTable($table_name) {
-//        if (!isset($this->data[$table_name])) {
-//            $this->data[$table_name] = [];
-//            return true;
-//        }
-//        return false;
-//    }
-    //tikrinama, ar lentelė yra
-    public function tableExists($table_name) {
+    /**
+     * Check if table exists
+     * @param string $table_name
+     * @return boolean
+     */
+    public function tableExists(string $table_name) {
         if (isset($this->data[$table_name])) {
-
             return true;
         }
         return false;
     }
 
-    //panaudojant tableExists, sukurti lentelę
+    /**
+     * Create a table
+     * @param string $table_name
+     * @return boolean
+     */
     public function createTable($table_name) {
         if (!$this->tableExists($table_name)) {
             $this->data[$table_name] = [];
@@ -69,12 +65,21 @@ class FileDB {
         return false;
     }
 
-    //ištrinti lentelę kartu su indeksu
+    /**
+     * Delete table from database
+     * @param string $table_name
+     * @return boolean
+     */
     public function dropTable($table_name) {
         unset($this->data[$table_name]);
+        return true;
     }
 
-    //ištuštinti lentelę, jei ji egzistuoja
+    /**
+     * Delete all table content
+     * @param string $table_name
+     * @return boolean
+     */
     public function truncateTable($table_name) {
         if ($this->tableExists($table_name)) {
             $this->data[$table_name] = [];
@@ -85,85 +90,103 @@ class FileDB {
 
     /**
      * Ši f-ja į pasirinktą Table, nauju arba nurodytu indeksu įdeda row masyvą.
-     * @param $table
-     * @param $row
+     * @param string $table
+     * @param array $row
      * @return bool
      */
     public function insertRow($table_name, $row, $row_id = null) {
         if ($row_id !== null) {
-
             if (!isset($this->data[$table_name][$row_id])) {
                 $this->data[$table_name][$row_id] = $row;
                 return $row_id;
             }
-
             return false;
         } else {
             $this->data[$table_name][] = $row;
-
             // surandame pask. indeksa
             end($this->data[$table_name]);
             $row_id = key($this->data[$table_name]);
-
             return $row_id;
         }
     }
 
-    public function rowExists($table_name, $row_id) {
-        if (isset($this->data[$table_name][$row_id])) {
+    /**
+     * Check if row exists in table
+     * @param string $table
+     * @param string|int $row_id
+     * @return boolean
+     */
+    public function rowExists($table, $row_id) {
+        if (isset($this->data[$table][$row_id])) {
             return true;
         }
         return false;
     }
 
-    public function insertRowIfNotExists($table_name, $row, $row_id) {
-        if (!$this->rowExists($table_name, $row_id)) {
-            $this->data[$table_name][$row_id] = $row;
-            return $row_id;
-        }
-        return false;
-    }
-
+    /**
+     * Update row content in a given row_id
+     * @param string $table
+     * @param string|int $row_id
+     * @param array $row
+     * @return boolean
+     */
     public function updateRow($table, $row_id, $row) {
-        if ($this->rowExist($table, $row_id)) {
+        if ($this->rowExists($table, $row_id)) {
             $this->data[$table][$row_id] = $row;
             return true;
         }
+
         return false;
     }
 
-    public function deleteRow($table_name, $row_id) {
-        if (isset($this->data[$table_name][$row_id])) {
-            unset($this->data[$table_name][$row_id]);
+    /**
+     * Create a row it it doesn't exist in table
+     * @param string $table
+     * @param string|int $row_id
+     * @param type $row
+     * @return boolean
+     */
+    public function insertRowIfNotExists($table, $row_id, $row) {
+        if (!$this->rowExists($table, $row_id)) {
+            return $this->insertRow($table, $row, $row_id); // insertRow function returns boolean
+        }
+        return false;
+    }
+
+    /**
+     * Delete row from table
+     * @param string $table
+     * @param string|int $row_id
+     * @return boolean
+     */
+    public function deleteRow($table, $row_id) {
+        if ($this->rowExists($table, $row_id)) {
+            unset($this->data[$table][$row_id]);
             return true;
         }
         return false;
     }
 
-    public function getRowsWhere($table, $conditions) {
+    public function getRowWhere($table, $conditions) {
         $rows = [];
 
         foreach ($this->data[$table] as $row_id => $row) {
             $success = true;
-            
-           
+
             foreach ($conditions as $condition_id => $condition) {
                 if ($row[$condition_id] !== $condition) {
                     $success = false;
-                    break;
                 }
             }
 
             if ($success = true) {
-                // i row indeksu row itraukiam row_id
-                $row['row'] = $row_id;
                 $rows[$row_id] = $row;
             }
         }
 
         return $rows;
     }
-    
+
     public function __destruct() {
         $this->save();
     }
